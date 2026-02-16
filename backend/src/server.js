@@ -2,6 +2,7 @@ import express from "express";
 import 'dotenv/config';
 import path from "path";
 import connectDB from "./config/db.js";
+import authRouter from "./routes/auth.route.js";
 
 const app=express();
 const port=process.env.PORT || 3000;
@@ -11,6 +12,7 @@ const __dirname=path.resolve();
 app.get("/",(req,res)=>{
     res.send("we are live");
 })
+app.use("/api/auth",authRouter);
 
 //make ready for deployment
 if(process.env.NODE_ENV==='production'){
