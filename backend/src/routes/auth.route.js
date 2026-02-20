@@ -1,7 +1,7 @@
 import express from "express";
 import { checkAuth, login, logout, signUp, updateProfile } from "../controllers/auth.controller.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
-import { arcjetProtection } from "../controllers/arcjet.middleware.js";
+import { arcjetProtection } from "../middleware/arcjet.middleware.js";
 
 const authRouter=express.Router();
 authRouter.use(arcjetProtection);
