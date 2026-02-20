@@ -42,10 +42,25 @@ export const getMessagesByUserId = async (req, res) => {
 
 export const sendMessages = async (req, res) => {
   try {
-    // extract text and image from request body and receiver id from route params
     const { text, image } = req.body;
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
+
+    // validate that at least text or image is provided
+    if (!text && !image) {
+      return res.status(400).json({ message: "Text or image is required." });
+    }
+
+    // prevent user from sending a message to themselves
+    if (senderId.toString() === receiverId.toString()) { // ✅ compare as strings, not .equals()
+      return res.status(400).json({ message: "Cannot send messages to yourself." });
+    }
+
+    // check if the receiver exists in the database
+    const receiverExists = await User.exists({ _id: receiverId });
+    if (!receiverExists) {
+      return res.status(404).json({ message: "Receiver not found." });
+    }
 
     // if image is provided upload it to cloudinary and get the secure url
     let imageUrl;
